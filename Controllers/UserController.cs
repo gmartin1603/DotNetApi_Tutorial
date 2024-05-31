@@ -1,4 +1,5 @@
 using DotNetApi.Data;
+using DotNetApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetApi.Controllers
@@ -20,12 +21,18 @@ namespace DotNetApi.Controllers
       return _dapper.LoadSingleData<DateTime>("SELECT GETDATE()");
     }
 
-    [HttpGet("GetUsers/{name}")]
-    // public IActionResult Test()
-    public string[] GetUsers(string name)
+    [HttpGet("GetUsers")]
+    public IEnumerable<User> GetUsers()
     {
-      string[] res = ["Hello", "World", name];
-      return res;
+      IEnumerable<User> users = _dapper.LoadData<User>("SELECT * FROM TutorialAppSchema.Users");
+      return users;
+    }
+
+    [HttpGet("GetSingleUser/{userId}")]
+    public IEnumerable<User> GetSingleUser(int userId)
+    {
+      IEnumerable<User> user = _dapper.LoadData<User>($"SELECT * FROM TutorialAppSchema.Users WHERE UserId = {userId}");
+      return user;
     }
 
   }
